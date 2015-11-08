@@ -93,7 +93,6 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 11
   });
-
   map_coord = map_data.features[0].geometry.coordinates[0][0][0]
   map.data.addGeoJson(map_data);
   map.data.setStyle({
