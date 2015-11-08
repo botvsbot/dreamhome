@@ -31,61 +31,61 @@
 </head>
 
 <body>
-    {% set zipcode = '85331r25' %}
+{% set zipcode = '85331r25' %}
 
-    <!-- Navigation -->
-    <a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
-    <nav id="sidebar-wrapper">
-        <ul class="sidebar-nav">
-            <a id="menu-close" href="#" class="btn btn-light btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
-            <li class="sidebar-brand">
-                <a href="#top"  onclick = $("#menu-close").click(); >Start Bootstrap</a>
-            </li>
-            <li>
-                <a href="#top" onclick = $("#menu-close").click(); >Home</a>
-            </li>
-            <li>
-                <a href="#about" onclick = $("#menu-close").click(); >About</a>
-            </li>
-            <li>
-                <a href="#services" onclick = $("#menu-close").click(); >Services</a>
-            </li>
-            <li>
-                <a href="#portfolio" onclick = $("#menu-close").click(); >Portfolio</a>
-            </li>
-            <li>
-                <a href="#contact" onclick = $("#menu-close").click(); >Contact</a>
-            </li>
-        </ul>
-    </nav>
+<!-- Navigation -->
+<a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
+<nav id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+        <a id="menu-close" href="#" class="btn btn-light btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
+        <li class="sidebar-brand">
+            <a href="#top"  onclick = $("#menu-close").click(); >Start Bootstrap</a>
+        </li>
+        <li>
+            <a href="#top" onclick = $("#menu-close").click(); >Home</a>
+        </li>
+        <li>
+            <a href="#about" onclick = $("#menu-close").click(); >About</a>
+        </li>
+        <li>
+            <a href="#services" onclick = $("#menu-close").click(); >Services</a>
+        </li>
+        <li>
+            <a href="#portfolio" onclick = $("#menu-close").click(); >Portfolio</a>
+        </li>
+        <li>
+            <a href="#contact" onclick = $("#menu-close").click(); >Contact</a>
+        </li>
+    </ul>
+</nav>
 
-    <!-- Header -->
-    <header id="top" class="header">
-        <div class="text-vertical-center">
-            <div style="background-color:rgba(0,0,0,0.45);">
+<!-- Header -->
+<header id="top" class="header">
+    <div class="text-vertical-center">
+        <div style="background-color:rgba(0,0,0,0.45);">
             <h1 style="color:#ccc">Western Addition</h1>
-            </div>
-            <br>
-            <a href="#about" class="btn btn-dark btn-lg">Find Out More</a>
         </div>
-    </header>
+        <br>
+        <a href="#about" class="btn btn-dark btn-lg">Find Out More</a>
+    </div>
+</header>
 
-    <!-- About -->
-    <section id="about" class="about">
-        <div class="container">
-            <div style="height:300px" id="map"></div>
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Stylish Portfolio is the perfect theme for your next project!</h2>
-                    <p class="lead">This theme features some wonderful photography courtesy of <a target="_blank" href="http://join.deathtothestockphoto.com/">Death to the Stock Photo</a>.</p>
-                </div>
+<!-- About -->
+<section id="about" class="about">
+    <div class="container">
+        <div style="height:300px" id="map"></div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Stylish Portfolio is the perfect theme for your next project!</h2>
+                <p class="lead">This theme features some wonderful photography courtesy of <a target="_blank" href="http://join.deathtothestockphoto.com/">Death to the Stock Photo</a>.</p>
             </div>
-            <!-- /.row -->
         </div>
-        <!-- /.container -->
-    </section>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+</section>
 
-    <script>
+<script>
     if ('{{ zipcode }}' != 'None') {
         console.log('here');
         var map_data;
@@ -99,7 +99,6 @@
             dataType: 'json',
             success: function (data, status, xhr) {
                 map_data = JSON.parse(data);
-                console.log('yikes');
                 console.log(map_data);
                 //successAction(data);
             },
@@ -108,257 +107,254 @@
     }
 
 
-function initMap() {
-    if ('{{ zipcode }}' != 'None') {
-        var zoom_var;
-        console.log(map_data.features.length);
-        if (map_data.features.length <= 5) {
-            zoom_var = 12
-        }
-        else if (map_data.features.length <= 30) {
-            zoom_var = 11
-        }
-        else if (map_data.features.length <= 100) {
-            zoom_var = 10
+    function initMap() {
+        if ('{{ zipcode }}' != 'None') {
+            var zoom_var;
+            console.log(map_data.features.length);
+            if (map_data.features.length <= 5) {
+                zoom_var = 12
+            }
+            else if (map_data.features.length <= 30) {
+                zoom_var = 11
+            }
+            else if (map_data.features.length <= 100) {
+                zoom_var = 10
+            }
+            else {
+                zoom_var = 9
+            }
+            console.log(zoom_var);
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: zoom_var,
+                scrollwheel: false
+            });
+
+            map_coord = map_data.features[0].geometry.coordinates[0][0][0];
+            console.log(map_data);
+            map_color = map_data.features[0].properties.color;
+
+            map.data.addGeoJson(map_data);
+
+            map.data.setStyle(function (feature) {
+                return {
+                    fillColor: feature.getProperty('color'),
+                    fillOpacity: 0.8,
+                    strokeColor: 'black',
+                    strokeWeight: 1
+                };
+            });
+
+            map.setCenter(new google.maps.LatLng(map_coord[1], map_coord[0]));
+
+            map.data.addListener('mouseover', function (event) {
+                map.data.revertStyle();
+                map.data.overrideStyle(event.feature, {strokeWeight: 8});
+                document.getElementById('modal_hood_title').textContent = event.feature.getProperty('NAME');
+                console.log(event.feature.getProperty('media'));
+                //console.log(document.getElementById('modal_hood_image').attr('src'));
+                // debugger;
+                $('#modal_hood_image').attr('src', event.feature.getProperty('media'))
+                //document.getElementById('modal_hood_image').attr('src').replace(event.feature.getProperty('media'));
+                /* other options*/
+            });
+
+            map.data.addListener('click',function(event){
+                $('#myModal').modal({show:true})
+            });
         }
         else {
-            zoom_var = 9
+            latLng = [33.45, -112.06];
+            map_vacant = new google.maps.Map(document.getElementById('map'), {
+                zoom: 11,
+                scrollwheel: false
+            });
+
+
+            map_vacant.setCenter(new google.maps.LatLng(latLng[0], latLng[1]));
+
         }
-        console.log(zoom_var);
-    map = new google.maps.Map(document.getElementById('map'), {
-        zoom: zoom_var,
-        scrollwheel: false
-    });
-
-    map_coord = map_data.features[0].geometry.coordinates[0][0][0];
-    console.log(map_data);
-    map_color = map_data.features[0].properties.color;
-
-    map.data.addGeoJson(map_data);
-
-    map.data.setStyle(function (feature) {
-        return {
-            fillColor: feature.getProperty('color'),
-            fillOpacity: 0.8,
-            strokeColor: 'black',
-            strokeWeight: 1
-        };
-    });
-
-    map.setCenter(new google.maps.LatLng(map_coord[1], map_coord[0]));
-
-    map.data.addListener('mouseover', function (event) {
-        map.data.revertStyle();
-        map.data.overrideStyle(event.feature, {strokeWeight: 8});
-        document.getElementById('modal_hood_title').textContent = event.feature.getProperty('NAME');
-        console.log(event.feature.getProperty('media'));
-        //console.log(document.getElementById('modal_hood_image').attr('src'));
-       // debugger;
-        $('#modal_hood_image').attr('src', event.feature.getProperty('media'))
-        //document.getElementById('modal_hood_image').attr('src').replace(event.feature.getProperty('media'));
-    /* other options*/
-    });
-
-    map.data.addListener('click',function(event){
-	    $('#myModal').modal({show:true})
-    });
-}
-    else {
-        latLng = [33.45, -112.06];
-        map_vacant = new google.maps.Map(document.getElementById('map'), {
-            zoom: 11,
-            scrollwheel: false
-        });
-
-
-        map_vacant.setCenter(new google.maps.LatLng(latLng[0], latLng[1]));
-
     }
-}
+</script>
 
-
-
-    </script>
-
-   <script async defer
+<script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCewFxO002NOxwqXvamA2YSGC3aBVJwLQo&signed_in=true&callback=initMap"></script>
 
-    <!-- Services -->
-    <!-- The circle icons use Font Awesome's stacked icon classes. For more information, visit http://fontawesome.io/examples/ -->
-    <section id="services" class="services bg-primary">
-        <div class="container">
-            <div class="row text-center">
-                <div class="col-lg-10 col-lg-offset-1">
-                    <h2>Property types</h2>
-                    <hr class="small">
-                    <div class="row">
-                        <div class="col-md-3 col-sm-6">
-                            <div class="service-item">
-                                <img src="../static/img/condominium_final.png/" alt="condos" height="82" width="82">
+<!-- Services -->
+<!-- The circle icons use Font Awesome's stacked icon classes. For more information, visit http://fontawesome.io/examples/ -->
+<section id="services" class="services bg-primary">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-10 col-lg-offset-1">
+                <h2>Property types</h2>
+                <hr class="small">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="service-item">
+                            <img src="../static/img/condominium_final.png/" alt="condos" height="82" width="82">
                             </span>
-                                <h4>
-                                    <strong>Condominiums</strong>
-                                </h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="service-item">
-                                <img src="../static/img/single_fam.png/" alt="single detached" height="82" width="82">
-                            </span>
-                                <h4>
-                                    <strong>Single family detached home</strong>
-                                </h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            </div>
-                        </div>
-                       <div class="col-md-3 col-sm-6">
-                            <div class="service-item">
-                                <img src="../static/img/townhouse.png/" alt="single detached" height="82" width="82">
-                            </span>
-                                <h4>
-                                    <strong>Townhouses</strong>
-                                </h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="service-item">
-                                <img src="../static/img/Skyscraper.png/" alt="single detached" height="82" width="82">
-                            </span>
-                                <h4>
-                                    <strong>High rise apartments</strong>
-                                </h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            </div>
+                            <h4>
+                                <strong>Condominiums</strong>
+                            </h4>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                         </div>
                     </div>
-                    <!-- /.row (nested) -->
-                </div>
-                <!-- /.col-lg-10 -->
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container -->
-    </section>
-
-    <!-- Callout -->
-    <aside class="callout">
-        <div class="text-vertical-center">
-            <h1>Vertically Centered Text</h1>
-        </div>
-    </aside>
-
-    <!-- Portfolio -->
-    <section id="portfolio" class="portfolio">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 col-lg-offset-1 text-center">
-                    <h2>Our Work</h2>
-                    <hr class="small">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="portfolio-item">
-                                <a href="#">
-                                    <img class="img-portfolio img-responsive" src="img/portfolio-1.jpg">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="portfolio-item">
-                                <a href="#">
-                                    <img class="img-portfolio img-responsive" src="img/portfolio-2.jpg">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="portfolio-item">
-                                <a href="#">
-                                    <img class="img-portfolio img-responsive" src="img/portfolio-3.jpg">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="portfolio-item">
-                                <a href="#">
-                                    <img class="img-portfolio img-responsive" src="img/portfolio-4.jpg">
-                                </a>
-                            </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="service-item">
+                            <img src="../static/img/single_fam.png/" alt="single detached" height="82" width="82">
+                            </span>
+                            <h4>
+                                <strong>Single family detached home</strong>
+                            </h4>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                         </div>
                     </div>
-                    <!-- /.row (nested) -->
-                    <a href="#" class="btn btn-dark">View More Items</a>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="service-item">
+                            <img src="../static/img/townhouse.png/" alt="single detached" height="82" width="82">
+                            </span>
+                            <h4>
+                                <strong>Townhouses</strong>
+                            </h4>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="service-item">
+                            <img src="../static/img/Skyscraper.png/" alt="single detached" height="92" width="82">
+                            </span>
+                            <h4>
+                                <strong>High rise apartments</strong>
+                            </h4>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                        </div>
+                    </div>
                 </div>
-                <!-- /.col-lg-10 -->
+                <!-- /.row (nested) -->
             </div>
-            <!-- /.row -->
+            <!-- /.col-lg-10 -->
         </div>
-        <!-- /.container -->
-    </section>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+</section>
 
-    <!-- Call to Action -->
-    <aside class="call-to-action bg-primary">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h3>The buttons below are impossible to resist.</h3>
-                    <a href="#" class="btn btn-lg btn-light">Click Me!</a>
-                    <a href="#" class="btn btn-lg btn-dark">Look at Me!</a>
+<!-- Callout -->
+<aside class="callout">
+    <div class="text-vertical-center">
+        <h1>Vertically Centered Text</h1>
+    </div>
+</aside>
+
+<!-- Portfolio -->
+<section id="portfolio" class="portfolio">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 text-center">
+                <h2>Our Work</h2>
+                <hr class="small">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="portfolio-item">
+                            <a href="#">
+                                <img class="img-portfolio img-responsive" src="img/portfolio-1.jpg">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="portfolio-item">
+                            <a href="#">
+                                <img class="img-portfolio img-responsive" src="img/portfolio-2.jpg">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="portfolio-item">
+                            <a href="#">
+                                <img class="img-portfolio img-responsive" src="img/portfolio-3.jpg">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="portfolio-item">
+                            <a href="#">
+                                <img class="img-portfolio img-responsive" src="img/portfolio-4.jpg">
+                            </a>
+                        </div>
+                    </div>
                 </div>
+                <!-- /.row (nested) -->
+                <a href="#" class="btn btn-dark">View More Items</a>
+            </div>
+            <!-- /.col-lg-10 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+</section>
+
+<!-- Call to Action -->
+<aside class="call-to-action bg-primary">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h3>The buttons below are impossible to resist.</h3>
+                <a href="#" class="btn btn-lg btn-light">Click Me!</a>
+                <a href="#" class="btn btn-lg btn-dark">Look at Me!</a>
             </div>
         </div>
-    </aside>
+    </div>
+</aside>
 
-    <!-- Map -->
-    <section id="contact" class="map">
-        <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;aq=0&amp;oq=twitter&amp;sll=28.659344,-81.187888&amp;sspn=0.128789,0.264187&amp;ie=UTF8&amp;hq=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;t=m&amp;z=15&amp;iwloc=A&amp;output=embed"></iframe>
-        <br />
-        <small>
-            <a href="https://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;aq=0&amp;oq=twitter&amp;sll=28.659344,-81.187888&amp;sspn=0.128789,0.264187&amp;ie=UTF8&amp;hq=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;t=m&amp;z=15&amp;iwloc=A"></a>
-        </small>
-        </iframe>
-    </section>
+<!-- Map -->
+<section id="contact" class="map">
+    <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;aq=0&amp;oq=twitter&amp;sll=28.659344,-81.187888&amp;sspn=0.128789,0.264187&amp;ie=UTF8&amp;hq=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;t=m&amp;z=15&amp;iwloc=A&amp;output=embed"></iframe>
+    <br />
+    <small>
+        <a href="https://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;aq=0&amp;oq=twitter&amp;sll=28.659344,-81.187888&amp;sspn=0.128789,0.264187&amp;ie=UTF8&amp;hq=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;t=m&amp;z=15&amp;iwloc=A"></a>
+    </small>
+    </iframe>
+</section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 col-lg-offset-1 text-center">
-                    <h4><strong>Start Bootstrap</strong>
-                    </h4>
-                    <p>3481 Melrose Place<br>Beverly Hills, CA 90210</p>
-                    <ul class="list-unstyled">
-                        <li><i class="fa fa-phone fa-fw"></i> (123) 456-7890</li>
-                        <li><i class="fa fa-envelope-o fa-fw"></i>  <a href="mailto:name@example.com">name@example.com</a>
-                        </li>
-                    </ul>
-                    <br>
-                    <ul class="list-inline">
-                        <li>
-                            <a href="#"><i class="fa fa-facebook fa-fw fa-3x"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-twitter fa-fw fa-3x"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-dribbble fa-fw fa-3x"></i></a>
-                        </li>
-                    </ul>
-                    <hr class="small">
-                    <p class="text-muted">Copyright &copy; Your Website 2014</p>
-                </div>
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 text-center">
+                <h4><strong>Start Bootstrap</strong>
+                </h4>
+                <p>3481 Melrose Place<br>Beverly Hills, CA 90210</p>
+                <ul class="list-unstyled">
+                    <li><i class="fa fa-phone fa-fw"></i> (123) 456-7890</li>
+                    <li><i class="fa fa-envelope-o fa-fw"></i>  <a href="mailto:name@example.com">name@example.com</a>
+                    </li>
+                </ul>
+                <br>
+                <ul class="list-inline">
+                    <li>
+                        <a href="#"><i class="fa fa-facebook fa-fw fa-3x"></i></a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-twitter fa-fw fa-3x"></i></a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-dribbble fa-fw fa-3x"></i></a>
+                    </li>
+                </ul>
+                <hr class="small">
+                <p class="text-muted">Copyright &copy; Your Website 2014</p>
             </div>
         </div>
-    </footer>
+    </div>
+</footer>
 
-    <!-- jQuery -->
-    <script src="../../static/js/jquery.js"></script>
+<!-- jQuery -->
+<script src="../../static/js/jquery.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="../../static/js/bootstrap.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="../../static/js/bootstrap.min.js"></script>
 
-    <!-- Custom Theme JavaScript -->
-    <script>
+<!-- Custom Theme JavaScript -->
+<script>
     // Closes the sidebar menu
     $("#menu-close").click(function(e) {
         e.preventDefault();
@@ -387,7 +383,7 @@ function initMap() {
             }
         });
     });
-    </script>
+</script>
 
 </body>
 

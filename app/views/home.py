@@ -11,12 +11,9 @@ home = Blueprint('home', __name__, url_prefix='/home')
 @home.route('/', methods=['GET', 'POST'])
 def home_page():
     if request.method == 'GET':
-        return render_template('index.html')
+        return render_template('index2.html')
     else:
         data = request.json
-        print "Here"
-        print data['zipcode']
-        print data['radius']
 
-        return jsonify(zip=data['zipcode']+'r'+data['radius'])
+        return jsonify(zip=data['zipcode_input']+'r'+data['radius'])
 
