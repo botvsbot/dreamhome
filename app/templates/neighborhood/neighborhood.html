@@ -276,28 +276,24 @@
             //document.getElementById('modal_hood_image').attr('src').replace(event.feature.getProperty('media'));
             /* other options*/
         });
-
+        var listings = [];
+       for(var i = 0; i < markerdata.length; i++) {
+       var associativeArray = {};
+        var ownership = markerdata[i]['ownership'];
+       var price = markerdata[i]['originalPrice'];
+        var daysonmarket = markerdata[i]['daysOnMarket'];
+        associativeArray["ownership"] = ownership;
+        associativeArray["originalPrice"] = price;
+        associativeArray["daysOnMarket"] = daysonmarket;
+        associativeArray["agent"] = markerdata[i]['agent'];
+           listings.push(associativeArray);
+    }
         map.data.addListener('click',function(event){
             $('#myModal').modal({show:true})
         });
 
-{#        for(var i = 0; i < markerdata.length; i++) {#}
-{#        console.log(markerdata[i]);#}
-{#        var lon = markerdata[i].coordinates[0];#}
-{#        var lat = markerdata[i].coordinates[1];#}
-{#        console.log(lat);#}
-{#        var myLatLng = {lat: lat, lng: lon};#}
-{#        var marker = new google.maps.Marker({#}
-{#            position: myLatLng,#}
-{#            map: map,#}
-{#            title: 'Hello World!'#}
-{#        });#}
-{#    }#}
     }
 
-    $('#demon').on('click', function() {
-        $('#myModal').modal({show: true});
-    });
 
 
 </script>

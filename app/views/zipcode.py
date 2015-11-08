@@ -18,9 +18,8 @@ def ziphome(zip_id=None):
         return render_template('zipcode/zipcode.html', zipcode=str(zips) if zips else None)
     else:
         data = request.json
-        print data['zipcodepp/views/neighborhood.py']
-        print data['radius']
-        return jsonify(zip=data['zipcode']+'r'+data['radius'])
+        print data
+        return jsonify(zip=data['zipcode_input']+'r'+data['radius'])
 
 
 def get_zipcode_from_id(zip_id):
