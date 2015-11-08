@@ -14,6 +14,5 @@ def home_page():
         return render_template('index2.html')
     else:
         data = request.json
-
         return jsonify(zip=data['zipcode_input']+'r'+data['radius'])
 

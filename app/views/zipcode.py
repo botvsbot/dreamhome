@@ -15,8 +15,6 @@ zipcode = Blueprint('zipcode', __name__, url_prefix='/zipcode')
 def ziphome(zip_id=None):
     if request.method == 'GET':
         zips = zip_id
-        print zips
-        print type(zips)
         return render_template('zipcode/zipcode.html', zipcode=str(zips) if zips else None)
     else:
         data = request.json
@@ -33,6 +31,8 @@ def get_zipcode_from_id(zip_id):
 @zipcode.route('/zip_hood_data/<zip_code>')
 def ziphood_shapedata(zip_code):
     json_map = get_neighborhoods_for_zipcode(zip_code.split('r')[0], int(zip_code.split('r')[1]))
+    # from app.views.neighborhood import get_neighborhood_from_id
+    # json_map = json.dumps(get_neighborhood_from_id(275040))
     return json.dumps(json_map)
 
 
