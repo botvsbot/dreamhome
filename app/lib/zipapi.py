@@ -29,6 +29,11 @@ def get_lat_lng_for_zipcode(zipcode):
         resp = urllib2.urlopen(req).read()
     except Exception as exc:
         print 'Failed to query data from to zipappi due to {}'.format(repr(exc))
-        return tuple([33.45, -112.06])
+        url = 'https://www.zipcodeapi.com/rest/{}/info.json/{}/degrees'.format(API_KEY_BACKUP, zipcode)
+        try:
+            req = urllib2.Request(url)
+            resp = urllib2.urlopen(req).read()
+        except Exception as exc:
+            return tuple([33.45, -112.06])
     resp_json = json.loads(resp)
     return tuple([resp_json['lat'], resp_json['lng']])

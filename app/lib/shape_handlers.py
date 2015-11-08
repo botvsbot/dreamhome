@@ -38,8 +38,12 @@ def get_neighborhoods_for_zipcode(zipcode, radius):
             new_json['features'][-1]['properties']['color'] = 'green'
     data = new_json['features'][randint(0, len(new_json['features'])-1)]['properties']
     media_of_interest = retsly.get_media_for_zipcode(data['ZCTA5CE10'], count=len(new_json['features']))
-    for (index, entry) in enumerate(new_json.get('features')):
-        entry['properties']['media'] = media_of_interest[index]
+    if media_of_interest:
+        for (index, entry) in enumerate(new_json.get('features')):
+            if index < len(media_of_interest):
+                entry['properties']['media'] = media_of_interest[index]
+            else:
+                entry['properties']['media'] = ''
     return json.dumps(new_json)
 
 
