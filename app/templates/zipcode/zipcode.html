@@ -88,7 +88,8 @@
 
          <div class="details">
             <p id="desc_gist" class="summary ng-binding" data-ng-bind="neighborhood.title">A convenient greenspot</p>
-            <p id="desc_summary" class="description ng-binding">This area of Longueuil wears its name well, as the greenest area of the entire city. Huge Michel-Chartrand Park offers a wonderful respite to famil...<a href="/neighborhoods/montreal/longueuil/longueuilsurleparc" title="Find out more about Longueuil sur le Parc"> See Neighborhood Profile</a></p>
+            <p id="desc_summary" class="description ng-binding">This area of Longueuil wears its name well, as the greenest area of the entire city.
+                <a id="modal_neighbor_link" href="/neighborhoods/montreal/longueuil/longueuilsurleparc" title="Find out more about Longueuil sur le Parc"> See Neighborhood Profile</a></p>
         </div>
 {#        <div class="modal-header">#}
 {#          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>#}
@@ -129,7 +130,6 @@
 function initMap() {
     if ('{{ zipcode }}' != 'None') {
         var zoom_var;
-        //console.log(map_data.features.length);
         if (map_data.features.length <= 5) {
             zoom_var = 12
         }
@@ -168,9 +168,12 @@ function initMap() {
         map.data.revertStyle();
         map.data.overrideStyle(event.feature, {strokeWeight: 8});
         document.getElementById('modal_hood_title').textContent = event.feature.getProperty('NAME');
-        //console.log(document.getElementById('modal_hood_image').attr('src'));
-       // debugger;
-        $('#modal_hood_image').attr('src', event.feature.getProperty('media'))
+
+        $('#modal_hood_image').attr('src', event.feature.getProperty('media'));
+        $('#modal_neighbor_link').attr('href', '/neighborhood/'+event.feature.getProperty('REGIONID'));
+        $('#modal_neighbor_link').attr('title', 'Find out more about '+ event.feature.getProperty('NAME'));
+        console.log($('#modal_neighbor_link'));
+        console.log($('#modal_neighbor_link').attr('href'));
         //document.getElementById('modal_hood_image').attr('src').replace(event.feature.getProperty('media'));
     /* other options*/
     });

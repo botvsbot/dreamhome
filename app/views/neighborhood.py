@@ -4,7 +4,8 @@ __author__ = 'rganesh'
 from flask import Blueprint, request, render_template, jsonify
 from app.lib.shape_handlers import get_polygon_map
 from app.lib.zipapi import get_lat_lng_for_zipcode
-from app.lib.listing import listing_map
+
+from app.lib.retsly import get_listings_near_latlng, get_agent_for_listing_id
 import json
 
 # Define the blueprint:
@@ -15,7 +16,6 @@ neighborhood = Blueprint('neighborhood', __name__, url_prefix='/neighborhood')
 def neighborhome(neighborhood_id=None):
     # data = [('Sunday', 48), ('Monday', 27), ('Tuesday', 32), ('Wednesday', 42),
             # ('Thursday', 38), ('Friday', 45), ('Saturday', 52)]
-    get_listings_for_neighborhood(neighborhood_id)
     return render_template('neighborhood/neighborhood.html',
                            neighborid=neighborhood_id)
 
@@ -29,8 +29,34 @@ def get_listings_for_neighborhood(nid):
         lat_lng.append(get_lat_lng_for_zipcode(region['properties']['ZCTA5CE10']))
     print zipcodes
     print lat_lng
+    listings = {}
+    agents = []
+    done_with_agents = False
+    done_with_list = False
+    for lt_lg in lat_lng:
+        if done_with_list:
+            break
+        listing_near = get_listings_near_latlng(lt_lg[0], lt_lg[1])
+        if 'bundle' in listings:
+            listings['bundle'] += listing_near
+        else:
+            listings = listing_near.copy()
+        #import pdb; pdb.set_trace()
+        if len(listings['bundle']) >= 20:
+            done_with_list = True
+        for listing in listings['bundle']:
+            #import pdb; pdb.set_trace()
+            try:
+                listingID = listing['id']
+            except Exception as e:
+                continue
+            agent = get_agent_for_listing_id(listingID)
+            if agent != {}:
+                agents.append(agent)
+            if len(agents) == 4:
+                done_with_agents = True
 
-
+    return {'listings': listings, 'agents': agents}
 
 
 def get_neighborhood_from_id(neighborhood_id):
@@ -47,7 +73,14 @@ def hood_polygon(n_id):
     neighbor_map = json.dumps(get_neighborhood_from_id(n_id))
     return json.dumps(neighbor_map)
 
+
 @neighborhood.route('/listing/<n_id>')
 def hood_listing(n_id):
-    listing = json.dumps(listing_map())
-    return json.dumps(listing)
+    listing_and_agents = get_listings_for_neighborhood(n_id)
+    return json.dumps(listing_and_agents['listings'])
+
+
+@neighborhood.route('/agent/<n_id>')
+def hood_agents(n_id):
+    listing_and_agents = get_listings_for_neighborhood(n_id)
+    return json.dumps({'agents': listing_and_agents['agents']})

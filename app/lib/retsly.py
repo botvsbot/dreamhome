@@ -7,9 +7,21 @@ VENDOR = 'armls'
 from app.lib.zipapi import get_lat_lng_for_zipcode
 
 
-def get_listings_near_latlng(lat, lng):
+def get_agent_for_listing_id(lid):
+    base_url = 'https://rets.io/api/v1/{}/listings/{}/agent?access_token={}&limit=40'.format(VENDOR, lid, API_KEY)
+    try:
+        req = urllib2.Request(base_url)
+        resp = urllib2.urlopen(req).read()
+    except Exception as exc:
+        print 'Failed to query data from to retsly due to {}'.format(repr(exc))
+        return {}
+    resp_json = json.loads(resp)
+    return resp_json['bundle']
+
+
+def get_listings_near_latlng(lat, lng, threshold=20):
     base_url = 'https://rets.io/api/v1/{}/listings?access_token={}'.format(VENDOR, API_KEY)
-    query = '&limit=40&sortBy=yearBuilt&near={}%2C{}'.format(lat, lng)
+    query = '&limit={}&sortBy=yearBuilt&near={}%2C{}'.format(threshold, lat, lng)
     url = base_url + query
 
     try:
@@ -17,7 +29,7 @@ def get_listings_near_latlng(lat, lng):
         resp = urllib2.urlopen(req).read()
     except Exception as exc:
         print 'Failed to query data from to retsly due to {}'.format(repr(exc))
-        return ''
+        return {}
     resp_json = json.loads(resp)
     return resp_json
 
