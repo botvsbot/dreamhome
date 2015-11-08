@@ -14,14 +14,16 @@ zipcode = Blueprint('zipcode', __name__, url_prefix='/zipcode')
 @zipcode.route('/<zip_id>', methods=['GET', 'POST'])
 def ziphome(zip_id=None):
     if request.method == 'GET':
-        zips = zip_id if zip_id else None
-        return render_template('zipcode/zipcode.html', zipcode=zips)
+        zips = zip_id
+        print zips
+        print type(zips)
+        return render_template('zipcode/zipcode.html', zipcode=str(zips) if zips else None)
     else:
         data = request.json
         print data['zipcode']
         print data['priorities']
-
-        return jsonify(zip=data['zipcode'])
+        print data['radius']
+        return jsonify(zip=data['zipcode']+'r'+data['radius'])
 
 
 def get_zipcode_from_id(zip_id):
@@ -31,13 +33,12 @@ def get_zipcode_from_id(zip_id):
 
 @zipcode.route('/zip_hood_data/<zip_code>')
 def ziphood_shapedata(zip_code):
-    json_map = get_neighborhoods_for_zipcode(zip_code)
+    json_map = get_neighborhoods_for_zipcode(zip_code.split('r')[0], int(zip_code.split('r')[1]))
     return json.dumps(json_map)
 
 
 @zipcode.route('/shpdata')
 def neighborhood_shapedata():
-    print "Ajax call"
     json_map = get_polygon_map('app/data/neighborhood/ZillowNeighborhoods-AZ.shp')
     return json.dumps(json_map)
 

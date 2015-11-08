@@ -14,8 +14,10 @@ def home_page():
         return render_template('index.html')
     else:
         data = request.json
+        print "Here"
         print data['zipcode']
         print data['priorities']
+        print data['radius']
 
-        return jsonify(zip=data['zipcode'])
+        return jsonify(zip=data['zipcode']+'r'+data['radius'])
 

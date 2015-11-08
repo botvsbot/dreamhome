@@ -3,18 +3,12 @@
  */
 $.getScript("../static/js/utils.js", function () {
 
-
-    console.log("Here");
-    $.getJSON("/zipcode/shpdata", function(json) {
-    console.log("Inside");
-    console.log(json); // this will show the info it in firebug console
-    });
-
     $('.zipcode-submit-btn').on('click', function () {
         console.log("Button submitted");
         var data = {
             "zipcode": $('input[name="zipcode"]').val(),
-            "priorities": $('input[name="priorities"]').val()
+            "priorities": $('input[name="priorities"]').val(),
+            "radius": $("#radius option:selected").text()
         };
         successFunc = function (data) {
             window.location = "/zipcode/" + data.zip;

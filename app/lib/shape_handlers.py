@@ -1,6 +1,6 @@
 __author__ = 'radhikaparthasarathy'
 
-from app.lib import shapefile
+from app.lib import shapefile, zipapi
 import json
 import fiona
 from shapely.geometry import shape, mapping
@@ -15,6 +15,7 @@ def get_polygon_map(shape_file_name):
     buffer_data = []
     for sr in reader.shapeRecords():
         atr = dict(zip(field_names, sr.record))
+        atr['color'] = 'orange'
         geom = sr.shape.__geo_interface__
         buffer_data.append(dict(type="Feature", geometry=geom, properties=atr))
 
@@ -22,13 +23,17 @@ def get_polygon_map(shape_file_name):
     return json.dumps(polygon_map)
 
 
-def get_neighborhoods_for_zipcode(zipcode):
+def get_neighborhoods_for_zipcode(zipcode, radius):
+    zipcodes_in_radius = [data['zip_code'] for data in zipapi.get_zipcodes_in_radius(zipcode, int(radius))]
     intersect_json = get_polygon_map('app/data/intersect/zipcode_neighborhood_intersect.shp')
     intersect_json = json.loads(intersect_json)
     new_json = {'type': intersect_json['type'], 'features': []}
     for (index, entry) in enumerate(intersect_json.get('features')):
         if entry['properties']['ZCTA5CE10'] == zipcode:
             new_json['features'].append(entry)
+        elif entry['properties']['ZCTA5CE10'] in zipcodes_in_radius:
+            new_json['features'].append(entry)
+            new_json['features'][-1]['properties']['color'] = 'green'
     return json.dumps(new_json)
 
 

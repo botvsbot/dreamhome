@@ -68,12 +68,12 @@
     var map_data;
     var map;
     var url;
-    console.log({{ zipcode }});
-    if ({{ zipcode }}) {
-        url = '/zipcode/zip_hood_data/' + {{ zipcode }};
+    console.log('{{ zipcode }}');
+    if ('{{ zipcode }}' != 'None') {
+        url = 'zip_hood_data/' + '{{ zipcode }}';
     }
     else {
-        url = 'zipcode/shpdata'
+        url = 'shpdata'
     }
     $.ajax({
 
@@ -93,12 +93,24 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 11
   });
-  map_coord = map_data.features[0].geometry.coordinates[0][0][0]
+  map_coord = map_data.features[0].geometry.coordinates[0][0][0];
+  console.log(map_data);
+  map_color = map_data.features[0].properties.color;
   map.data.addGeoJson(map_data);
   map.data.setStyle({
-    fillColor: 'orange',
+    //fillColor: map_color,
     "stroke-width":"1",
     "fill-opacity":0.6
+  });
+  // examine each feature
+  map.data.forEach(function(feature) {
+      map_color = feature.getProperty('color');
+      console.log(map_color);
+      overrideStyle(feature, {
+          fillColor: map_color,
+          "fill-opacity": 0.6,
+          "stroke-width": "1"
+      });
   });
   map.setCenter(new google.maps.LatLng(map_coord[1], map_coord[0]));
   }
