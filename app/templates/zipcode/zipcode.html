@@ -115,7 +115,6 @@
             dataType: 'json',
             success: function (data, status, xhr) {
                 map_data = JSON.parse(data);
-                console.log(map_data);
                 //successAction(data);
             },
             async: false
@@ -143,7 +142,6 @@ function initMap() {
         else {
             zoom_var = 9
         }
-        console.log(zoom_var);
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: zoom_var,
         scrollwheel: false
@@ -170,7 +168,6 @@ function initMap() {
         map.data.revertStyle();
         map.data.overrideStyle(event.feature, {strokeWeight: 8});
         document.getElementById('modal_hood_title').textContent = event.feature.getProperty('NAME');
-        console.log(event.feature.getProperty('media'));
         //console.log(document.getElementById('modal_hood_image').attr('src'));
        // debugger;
         $('#modal_hood_image').attr('src', event.feature.getProperty('media'))

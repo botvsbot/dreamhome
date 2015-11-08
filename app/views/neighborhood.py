@@ -4,6 +4,7 @@ __author__ = 'rganesh'
 from flask import Blueprint, request, render_template, jsonify
 from app.lib.shape_handlers import get_polygon_map
 from app.lib.zipapi import get_lat_lng_for_zipcode
+from app.lib.listing import listing_map
 import json
 
 # Define the blueprint:
@@ -45,3 +46,8 @@ def get_neighborhood_from_id(neighborhood_id):
 def hood_polygon(n_id):
     neighbor_map = json.dumps(get_neighborhood_from_id(n_id))
     return json.dumps(neighbor_map)
+
+@neighborhood.route('/listing/<n_id>')
+def hood_listing(n_id):
+    listing = json.dumps(listing_map())
+    return json.dumps(listing)
