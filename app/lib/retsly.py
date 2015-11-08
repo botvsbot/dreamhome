@@ -48,7 +48,7 @@ def get_media_for_zipcode(zipcode, count=1):
     # (lat, lng) = get_lat_lng_for_zipcode(zipcode)
     (lat, lng) = tuple([33.45, -112.06])
     base_url = 'https://rets.io/api/v1/{}/listings?access_token={}'.format(VENDOR, API_KEY)
-    query = '&limit=25&sortBy=yearBuilt&near={}%2C{}'.format(lat, lng)
+    query = '&limit=50&sortBy=yearBuilt&near={}%2C{}'.format(lat, lng)
     url = base_url + query
 
     try:
@@ -75,5 +75,6 @@ def get_media_for_zipcode(zipcode, count=1):
                     continue
                 else:
                     media_list.append(media['url'])
+    return media_list
                     # if len(media_of_interest) > 10:
                     #     return media_of_interest[randint(0, len(media_of_interest)-1)]

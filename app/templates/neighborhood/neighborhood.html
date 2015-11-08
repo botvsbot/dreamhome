@@ -280,20 +280,20 @@
             /* other options*/
         });
         var listings = [];
-       for(var i = 0; i < markerdata.length; i++) {
-       var associativeArray = {};
-        var ownership = markerdata[i]['ownership'];
-       var price = markerdata[i]['originalPrice'];
-        var daysonmarket = markerdata[i]['daysOnMarket'];
-        associativeArray["ownership"] = ownership;
-        associativeArray["originalPrice"] = price;
-        associativeArray["daysOnMarket"] = daysonmarket;
-        associativeArray["agent"] = markerdata[i]['agent'];
-           listings.push(associativeArray);
+        for (var i = 0; i < markerdata.length; i++) {
+            var associativeArray = {};
+            var ownership = markerdata[i]['ownership'];
+            var price = markerdata[i]['originalPrice'];
+            var daysonmarket = markerdata[i]['daysOnMarket'];
+            associativeArray["ownership"] = ownership;
+            associativeArray["originalPrice"] = price;
+            associativeArray["daysOnMarket"] = daysonmarket;
+            associativeArray["agent"] = markerdata[i]['agent'];
+            listings.push(associativeArray);
         }
         console.log(listings);
-        map.data.addListener('click',function(event){
-            $('#myModal').modal({show:true});
+        map.data.addListener('click', function (event) {
+            $('#myModal').modal({show: true});
         });
     }
 </script>
@@ -317,7 +317,7 @@
                             <h4>
                                 <strong>Condominiums</strong>
                             </h4>
-                            <h3><p>12.4%</p></h3>
+                            <h3><p>72.4%</p></h3>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6">
@@ -327,7 +327,7 @@
                             <h4>
                                 <strong>Single family detached home</strong>
                             </h4>
-                            <h3><p>72.3%</p></h3>
+                            <h3><p>12.3%</p></h3>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6">
@@ -419,7 +419,7 @@
 <div class="box"><iframe style="float:left;width:100%" src='http://www.movoto.com/MarketChartIframe?type=0&stateCode=az&cityNameInURL=tucson&city2=&time=5Y&metric=Median%20List%20Price' height='420' width='2040' frameborder='0' scrolling='no'></iframe><br/></div>
 
 <!-- jQuery -->
-<script src="../../static/js/jquery.js"></script>
+<script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="../../static/js/bootstrap.min.js"></script>

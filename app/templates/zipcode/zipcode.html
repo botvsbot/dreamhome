@@ -70,7 +70,7 @@
         </div>
 
 <div class="modal" id="myModal">
-	<div class="modal-dialog">
+	<div class="modal-dialog" style="width:20%">
 
       <div class="modal-content">
 {#          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>#}
@@ -87,7 +87,7 @@
 
          <div class="details">
             <p id="desc_gist" class="summary ng-binding" data-ng-bind="neighborhood.title">A convenient greenspot</p>
-            <p id="desc_summary" class="description ng-binding">This area of Longueuil wears its name well, as the greenest area of the entire city.
+            <p id="desc_summary" class="description ng-binding">Click the following link to find out more about this area:
                 <a id="modal_neighbor_link" href="/neighborhoods/montreal/longueuil/longueuilsurleparc" title="Find out more about Longueuil sur le Parc"> See Neighborhood Profile</a></p>
         </div>
 {#        <div class="modal-header">#}
@@ -167,8 +167,9 @@ function initMap() {
         map.data.revertStyle();
         map.data.overrideStyle(event.feature, {strokeWeight: 8});
         document.getElementById('modal_hood_title').textContent = event.feature.getProperty('NAME');
-
-        $('#modal_hood_image').attr('src', event.feature.getProperty('media'));
+        if (event.feature.getProperty('media') != '') {
+            $('#modal_hood_image').attr('src', event.feature.getProperty('media'));
+        }
         $('#modal_neighbor_link').attr('href', '/neighborhood/'+event.feature.getProperty('REGIONID'));
         $('#modal_neighbor_link').attr('title', 'Find out more about '+ event.feature.getProperty('NAME'));
         console.log($('#modal_neighbor_link'));
