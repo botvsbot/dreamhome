@@ -5757,11 +5757,13 @@ button.close {
   overflow-y: auto;
 }
 .modal-dialog {
-  position: relative;
+  position: absolute;
   width: auto;
   margin: 10px;
+  right:0px;
 }
 .modal-content {
+  float:right;
   position: relative;
   background-color: #fff;
   -webkit-background-clip: padding-box;
@@ -5779,6 +5781,7 @@ button.close {
   right: 0;
   left: 0;
   background-color: #000;
+  background: none;
 }
 .modal-backdrop.fade {
   filter: alpha(opacity=0);
@@ -5803,6 +5806,7 @@ button.close {
 .modal-body {
   position: relative;
   padding: 15px;
+  width: 400px;
 }
 .modal-footer {
   padding: 15px;
