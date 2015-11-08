@@ -31,24 +31,34 @@
     <section class="bg-primary" id="about">
         <div class="container">
             <div class="row">
+
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                     {# <a href="#" class="btn btn-default btn-xl">Get Started!</a> #}
-                    {% if zipcode == None %}
-                      <input type="text" name="zipcode_input" placeholder="zipcode">
-
-                      Search radius:
-                      <select name="radius" id="radius">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                      </select> mi
-
-                      <button type="button" class="btn btn-default btn-lg zipcode-submit-btn">
-                          Submit
-                      </button>
+                    {% if zipcode %}
+                        {% set zipcode_display = 'display:none' %}
+                        {% set nozipcode_display = 'display:block' %}
                     {% else %}
-                        <p class="text-faded">Neighborhoods within {{ zipcode.split('r')[1] }} miles of {{ zipcode.split('r')[0] }}. <a href="/zipcode" class="text-faded">Search for a different zipcode</a></p>
+                        {% set nozipcode_display = 'display:none' %}
+                        {% set zipcode_display = 'display:block' %}
                     {% endif %}
+                      <div id="zipcode_entry" style='{{ zipcode_display }}'>
+                        <input type="text" name="zipcode_input" placeholder="zipcode">
+
+                        Search radius:
+                        <select name="radius" id="radius">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                        </select> mi
+
+                        <button type="button" class="btn btn-default btn-lg zipcode-submit-btn" id="zipcode-btn">
+                              Submit
+                        </button>
+                      </div>
+                      <div id="dummy_hood" style='{{ nozipcode_display }}'>
+                      <p class="text-faded">Neighborhoods within {{ zipcode.split('r')[1] }} miles of {{ zipcode.split('r')[0] }}.
+                          <a id="show_href" href="javascript:;" class="text-faded">Search for a different zipcode</a></p></div>
+                </div>
                 </div>
             </div>
         </div>
@@ -68,7 +78,7 @@
                 <a id="modal_hood_title" href="" title="Longueuil sur le Parc's Neighborhood Profile" data-ng-bind="neighborhood.name" class="ng-binding">Longueuil sur le Parc</a>
             </h3>
 
-            <a classs="photo-link" href="/neighborhoods/montreal/longueuil/longueuilsurleparc" title="Longueuil sur le Parc's Neighborhood Profile">
+            <a class="photo-link" href="/neighborhoods/montreal/longueuil/longueuilsurleparc" title="Longueuil sur le Parc's Neighborhood Profile">
                 <img src="https://s3.amazonaws.com/n_neighborhoods/raw-longueuil-sur-le-parc-300x200.jpg" alt="Longueuil's Photo">
                 </a>
          </div>
@@ -108,6 +118,12 @@
             async: false
         });
     }
+
+    $('#show_href').on('click', function(event){
+       $('#dummy_hood').hide();
+       $('#zipcode_entry').show();
+    });
+
 
 
 

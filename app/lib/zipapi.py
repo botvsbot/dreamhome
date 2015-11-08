@@ -5,7 +5,7 @@ import json
 
 
 def get_zipcodes_in_radius(zipcode, radius):
-    api_key = 'RT90tpWRQOis5I0dWYqsRpOBEAUS4XhWQrWjQSaHGt9LcaY88pB0OpBs0wl5tD1j'
+    api_key = 'cuVGlnt7LJ2ZgQbunfObcDTM1J1G4hLhLHX74qeQagQq71UugJGtmzfoig5nyQEk'
     url = 'https://www.zipcodeapi.com/rest/{}/radius.json/{}/{}/miles'.format(api_key, zipcode, radius)
 
     try:
