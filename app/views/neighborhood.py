@@ -16,8 +16,11 @@ neighborhood = Blueprint('neighborhood', __name__, url_prefix='/neighborhood')
 def neighborhome(neighborhood_id=None):
     # data = [('Sunday', 48), ('Monday', 27), ('Tuesday', 32), ('Wednesday', 42),
             # ('Thursday', 38), ('Friday', 45), ('Saturday', 52)]
+    neighbors = get_neighborhood_from_id(neighborhood_id)
+    neighborhood_name = neighbors['features'][0]['properties']['NAME']
     return render_template('neighborhood/neighborhood.html',
-                           neighborid=neighborhood_id)
+                           neighborid=neighborhood_id,
+                           neighborname=neighborhood_name)
 
 
 def get_listings_for_neighborhood(nid):
@@ -57,7 +60,6 @@ def get_listings_for_neighborhood(nid):
                 done_with_agents = True
 
     return {'listings': listings, 'agents': agents}
-
 
 def get_neighborhood_from_id(neighborhood_id):
     json_map = json.loads(get_polygon_map('app/data/intersect/zipcode_neighborhood_intersect.shp'))
