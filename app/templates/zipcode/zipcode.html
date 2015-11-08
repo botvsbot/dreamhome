@@ -33,7 +33,6 @@
             <div class="row">
 
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    {# <a href="#" class="btn btn-default btn-xl">Get Started!</a> #}
                     {% if zipcode %}
                         {% set zipcode_display = 'display:none' %}
                         {% set nozipcode_display = 'display:block' %}
@@ -51,7 +50,7 @@
                             <option value="25">25</option>
                         </select> mi
 
-                        <button type="button" class="btn btn-default btn-lg zipcode-submit-btn" id="zipcode-btn">
+                        <button type="button" class="btn btn-default btn-sm zipcode-submit-btn" id="zipcode-btn">
                               Submit
                         </button>
                       </div>
@@ -79,7 +78,8 @@
             </h3>
 
             <a class="photo-link" href="/neighborhoods/montreal/longueuil/longueuilsurleparc" title="Longueuil sur le Parc's Neighborhood Profile">
-                <img src="https://s3.amazonaws.com/n_neighborhoods/raw-longueuil-sur-le-parc-300x200.jpg" alt="Longueuil's Photo">
+
+                <img class='photo' id="modal_hood_image" src="https://s3.amazonaws.com/n_neighborhoods/raw-longueuil-sur-le-parc-300x200.jpg" alt="Longueuil's Photo">
                 </a>
          </div>
 
@@ -129,8 +129,23 @@
 
 function initMap() {
     if ('{{ zipcode }}' != 'None') {
+        var zoom_var;
+        console.log(map_data.features.length);
+        if (map_data.features.length <= 5) {
+            zoom_var = 12
+        }
+        else if (map_data.features.length <= 30) {
+            zoom_var = 11
+        }
+        else if (map_data.features.length <= 100) {
+            zoom_var = 10
+        }
+        else {
+            zoom_var = 9
+        }
+        console.log(zoom_var);
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 11,
+        zoom: zoom_var,
         scrollwheel: false
     });
 
@@ -155,6 +170,11 @@ function initMap() {
         map.data.revertStyle();
         map.data.overrideStyle(event.feature, {strokeWeight: 8});
         document.getElementById('modal_hood_title').textContent = event.feature.getProperty('NAME');
+        console.log(event.feature.getProperty('media'));
+        //console.log(document.getElementById('modal_hood_image').attr('src'));
+       // debugger;
+        $('#modal_hood_image').attr('src', event.feature.getProperty('media'))
+        //document.getElementById('modal_hood_image').attr('src').replace(event.feature.getProperty('media'));
     /* other options*/
     });
 

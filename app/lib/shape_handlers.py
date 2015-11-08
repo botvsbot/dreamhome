@@ -1,10 +1,11 @@
 __author__ = 'radhikaparthasarathy'
 
-from app.lib import shapefile, zipapi
+from app.lib import shapefile, zipapi, retsly
 import json
 import fiona
 from shapely.geometry import shape, mapping
 import rtree
+from random import randint
 
 
 # read the shapefile
@@ -13,7 +14,7 @@ def get_polygon_map(shape_file_name):
     fields = reader.fields[1:]
     field_names = [field[0] for field in fields]
     buffer_data = []
-    for sr in reader.shapeRecords():
+    for (index, sr) in enumerate(reader.shapeRecords()):
         atr = dict(zip(field_names, sr.record))
         atr['color'] = 'orange'
         geom = sr.shape.__geo_interface__
@@ -35,6 +36,11 @@ def get_neighborhoods_for_zipcode(zipcode, radius):
         elif entry['properties']['ZCTA5CE10'] in zipcodes_in_radius:
             new_json['features'].append(entry)
             new_json['features'][-1]['properties']['color'] = 'green'
+    data = new_json['features'][randint(0, len(new_json['features'])-1)]['properties']
+    media_of_interest = retsly.get_media_for_zipcode(data['ZCTA5CE10'], count=len(new_json['features']))
+    print media_of_interest
+    for (index, entry) in enumerate(new_json.get('features')):
+        entry['properties']['media'] = media_of_interest[index]
     return json.dumps(new_json)
 
 
