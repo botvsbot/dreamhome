@@ -1405,6 +1405,10 @@ ol ol {
   margin-bottom: 0;
 }
 
+
+#desc_summary{
+  margin:20px;
+}
 .page-header2 {
   width: 20px;
     height: 1px;
@@ -5765,6 +5769,7 @@ button.close {
 }
 .modal-content {
   float:right;
+  margin-right: 15px;
   position: relative;
   background-color: #fff;
   -webkit-background-clip: padding-box;
@@ -5775,6 +5780,9 @@ button.close {
   outline: 0;
   -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
           box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+}
+#desc_gist{
+  margin:20px;
 }
 .modal-backdrop {
   position: absolute;
@@ -5809,6 +5817,14 @@ button.close {
   padding: 15px;
   width: 400px;
 }
+.photo {
+    background-color: #4E1313;
+    display: block;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}
 .modal-footer {
   padding: 15px;
   text-align: right;
@@ -5833,7 +5849,7 @@ button.close {
 }
 @media (min-width: 768px) {
   .modal-dialog {
-    width: 600px;
+    width: 20%;
     margin: 30px auto;
   }
   .modal-content {

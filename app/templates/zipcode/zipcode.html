@@ -63,13 +63,27 @@
 <div class="modal" id="myModal">
 	<div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 id="modal_hood_title" class="modal-title">Modal title</h4>
+          <div class="photo">
+            <h3>
+                <a id="modal_hood_title" href="" title="Longueuil sur le Parc's Neighborhood Profile" data-ng-bind="neighborhood.name" class="ng-binding">Longueuil sur le Parc</a>
+            </h3>
+
+            <a classs="photo-link" href="/neighborhoods/montreal/longueuil/longueuilsurleparc" title="Longueuil sur le Parc's Neighborhood Profile">
+                <img src="https://s3.amazonaws.com/n_neighborhoods/raw-longueuil-sur-le-parc-300x200.jpg" alt="Longueuil's Photo">
+                </a>
+         </div>
+
+         <div class="details">
+            <p id="desc_gist" class="summary ng-binding" data-ng-bind="neighborhood.title">A convenient greenspot</p>
+            <p id="desc_summary" class="description ng-binding">This area of Longueuil wears its name well, as the greenest area of the entire city. Huge Michel-Chartrand Park offers a wonderful respite to famil...<a href="/neighborhoods/montreal/longueuil/longueuilsurleparc" title="Find out more about Longueuil sur le Parc"> See Neighborhood Profile</a></p>
         </div>
-        <div class="modal-body">
-          <img id="image-gallery-image" class="img-responsive" src="http://upload.wikimedia.org/wikipedia/commons/7/78/1997_Fiat_Panda.JPG">
-        </div>
+{#        <div class="modal-header">#}
+{#          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>#}
+{#          <h4 id="modal_hood_title" class="modal-title">Modal title</h4>#}
+{#        </div>#}
+{#        <div class="modal-body">#}
+{#          <img id="image-gallery-image" class="img-responsive" src="http://upload.wikimedia.org/wikipedia/commons/7/78/1997_Fiat_Panda.JPG">#}
+{#        </div>#}
       </div>
     </div>
 </div>
