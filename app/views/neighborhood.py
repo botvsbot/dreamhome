@@ -9,7 +9,7 @@ neighborhood = Blueprint('neighborhood', __name__, url_prefix='/neighborhood')
 
 @neighborhood.route('/')
 @neighborhood.route('/<neighborhood_id>')
-def hello(neighborhood_id=None):
+def neighborhome(neighborhood_id=None):
     return render_template('neighborhood/neighborhood.html',
                            neighbor=get_neighborhood_from_id(neighborhood_id) if neighborhood_id else None)
 

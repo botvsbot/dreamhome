@@ -9,7 +9,7 @@ listing = Blueprint('listing', __name__, url_prefix='/listing')
 
 @listing.route('/')
 @listing.route('/<listing_id>')
-def hello(listing_id=None):
+def listinghome(listing_id=None):
     return render_template('listing/listing.html', listing=get_listing_from_id(listing_id) if listing_id else None)
 
 
