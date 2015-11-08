@@ -20,7 +20,7 @@
     <!-- Custom Fonts -->
     <link href="../../static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="../../static/http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -31,6 +31,7 @@
 </head>
 
 <body>
+    {% set zipcode = '85331r25' %}
 
     <!-- Navigation -->
     <a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
@@ -72,6 +73,7 @@
     <!-- About -->
     <section id="about" class="about">
         <div class="container">
+            <div style="height:300px" id="map"></div>
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <h2>Stylish Portfolio is the perfect theme for your next project!</h2>
@@ -83,65 +85,151 @@
         <!-- /.container -->
     </section>
 
+    <script>
+    if ('{{ zipcode }}' != 'None') {
+        console.log('here');
+        var map_data;
+        var map;
+        var url = '../zipcode/zip_hood_data/' + '{{ zipcode }}';
+        console.log(url);
+        $.ajax({
+            url: url,
+            type: 'get',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (data, status, xhr) {
+                map_data = JSON.parse(data);
+                console.log('yikes');
+                console.log(map_data);
+                //successAction(data);
+            },
+            async: false
+        });
+    }
+
+
+function initMap() {
+    if ('{{ zipcode }}' != 'None') {
+        var zoom_var;
+        console.log(map_data.features.length);
+        if (map_data.features.length <= 5) {
+            zoom_var = 12
+        }
+        else if (map_data.features.length <= 30) {
+            zoom_var = 11
+        }
+        else if (map_data.features.length <= 100) {
+            zoom_var = 10
+        }
+        else {
+            zoom_var = 9
+        }
+        console.log(zoom_var);
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: zoom_var,
+        scrollwheel: false
+    });
+
+    map_coord = map_data.features[0].geometry.coordinates[0][0][0];
+    console.log(map_data);
+    map_color = map_data.features[0].properties.color;
+
+    map.data.addGeoJson(map_data);
+
+    map.data.setStyle(function (feature) {
+        return {
+            fillColor: feature.getProperty('color'),
+            fillOpacity: 0.8,
+            strokeColor: 'black',
+            strokeWeight: 1
+        };
+    });
+
+    map.setCenter(new google.maps.LatLng(map_coord[1], map_coord[0]));
+
+    map.data.addListener('mouseover', function (event) {
+        map.data.revertStyle();
+        map.data.overrideStyle(event.feature, {strokeWeight: 8});
+        document.getElementById('modal_hood_title').textContent = event.feature.getProperty('NAME');
+        console.log(event.feature.getProperty('media'));
+        //console.log(document.getElementById('modal_hood_image').attr('src'));
+       // debugger;
+        $('#modal_hood_image').attr('src', event.feature.getProperty('media'))
+        //document.getElementById('modal_hood_image').attr('src').replace(event.feature.getProperty('media'));
+    /* other options*/
+    });
+
+    map.data.addListener('click',function(event){
+	    $('#myModal').modal({show:true})
+    });
+}
+    else {
+        latLng = [33.45, -112.06];
+        map_vacant = new google.maps.Map(document.getElementById('map'), {
+            zoom: 11,
+            scrollwheel: false
+        });
+
+
+        map_vacant.setCenter(new google.maps.LatLng(latLng[0], latLng[1]));
+
+    }
+}
+
+
+
+    </script>
+
+   <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCewFxO002NOxwqXvamA2YSGC3aBVJwLQo&signed_in=true&callback=initMap"></script>
+
     <!-- Services -->
     <!-- The circle icons use Font Awesome's stacked icon classes. For more information, visit http://fontawesome.io/examples/ -->
     <section id="services" class="services bg-primary">
         <div class="container">
             <div class="row text-center">
                 <div class="col-lg-10 col-lg-offset-1">
-                    <h2>Our Services</h2>
+                    <h2>Property types</h2>
                     <hr class="small">
                     <div class="row">
                         <div class="col-md-3 col-sm-6">
                             <div class="service-item">
-                                <span class="fa-stack fa-4x">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-cloud fa-stack-1x text-primary"></i>
+                                <img src="../static/img/condominium_final.png/" alt="condos" height="82" width="82">
                             </span>
                                 <h4>
-                                    <strong>Service Name</strong>
+                                    <strong>Condominiums</strong>
                                 </h4>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                <a href="#" class="btn btn-light">Learn More</a>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6">
                             <div class="service-item">
-                                <span class="fa-stack fa-4x">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-compass fa-stack-1x text-primary"></i>
+                                <img src="../static/img/single_fam.png/" alt="single detached" height="82" width="82">
                             </span>
                                 <h4>
-                                    <strong>Service Name</strong>
+                                    <strong>Single family detached home</strong>
                                 </h4>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                <a href="#" class="btn btn-light">Learn More</a>
+                            </div>
+                        </div>
+                       <div class="col-md-3 col-sm-6">
+                            <div class="service-item">
+                                <img src="../static/img/townhouse.png/" alt="single detached" height="82" width="82">
+                            </span>
+                                <h4>
+                                    <strong>Townhouses</strong>
+                                </h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6">
                             <div class="service-item">
-                                <span class="fa-stack fa-4x">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-flask fa-stack-1x text-primary"></i>
+                                <img src="../static/img/Skyscraper.png/" alt="single detached" height="82" width="82">
                             </span>
                                 <h4>
-                                    <strong>Service Name</strong>
+                                    <strong>High rise apartments</strong>
                                 </h4>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                <a href="#" class="btn btn-light">Learn More</a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="service-item">
-                                <span class="fa-stack fa-4x">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-shield fa-stack-1x text-primary"></i>
-                            </span>
-                                <h4>
-                                    <strong>Service Name</strong>
-                                </h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                <a href="#" class="btn btn-light">Learn More</a>
                             </div>
                         </div>
                     </div>

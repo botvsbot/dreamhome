@@ -124,13 +124,10 @@
        $('#zipcode_entry').show();
     });
 
-
-
-
 function initMap() {
     if ('{{ zipcode }}' != 'None') {
         var zoom_var;
-        console.log(map_data.features.length);
+        //console.log(map_data.features.length);
         if (map_data.features.length <= 5) {
             zoom_var = 12
         }
