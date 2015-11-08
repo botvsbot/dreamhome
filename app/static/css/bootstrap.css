@@ -5860,6 +5860,10 @@ button.close {
   .modal-dialog {
     width: 20%;
     margin: 30px auto;
+    position: absolute;
+  width: auto;
+  margin: 10px;
+  right:0px;
   }
   .modal-content {
     -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
