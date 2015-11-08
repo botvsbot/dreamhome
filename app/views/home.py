@@ -16,7 +16,6 @@ def home_page():
         data = request.json
         print "Here"
         print data['zipcode']
-        print data['priorities']
         print data['radius']
 
         return jsonify(zip=data['zipcode']+'r'+data['radius'])

@@ -24,44 +24,35 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../static/css/creative.css" type="text/css">
-    <script src="../../static/js/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 
 <body id="page-top">
-    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand page-scroll" href="#page-top">Start Bootstrap</a>
-            </div>
+    <section class="bg-primary" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    {# <a href="#" class="btn btn-default btn-xl">Get Started!</a> #}
+                    {% if zipcode == None %}
+                      <input type="text" name="zipcode_input" placeholder="zipcode">
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a class="page-scroll" href="#about">About</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#services">Services</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#portfolio">Portfolio</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#contact">Contact</a>
-                    </li>
-                </ul>
+                      Search radius:
+                      <select name="radius" id="radius">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                      </select> mi
+
+                      <button type="button" class="btn btn-default btn-lg zipcode-submit-btn">
+                          Submit
+                      </button>
+                    {% else %}
+                        <p class="text-faded">Neighborhoods within {{ zipcode.split('r')[1] }} miles of {{ zipcode.split('r')[0] }}. <a href="/zipcode" class="text-faded">Search for a different zipcode</a></p>
+                    {% endif %}
+                </div>
             </div>
-            <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container-fluid -->
-    </nav>
+    </section>
 
 
     <div style="height:600px" id="map"></div>
@@ -82,42 +73,41 @@
       </div>
     </div>
 </div>
-{#    <div id="info-box" style="width:20px;height:20px"></div>#}
+
     <script>
-    var map_data;
-    var map;
-    var url;
-    console.log('{{ zipcode }}');
     if ('{{ zipcode }}' != 'None') {
-        url = 'zip_hood_data/' + '{{ zipcode }}';
-    }
-    else {
-        console.log('Here');
-        url = '/zipcode/shpdata'
-    }
-    $.ajax({
+        var map_data;
+        var map;
+        var url = 'zip_hood_data/' + '{{ zipcode }}';
 
-        url: url,
-        type: 'get',
-        contentType: 'application/json',
-        dataType: 'json',
-        success: function (data, status, xhr) {
-            map_data = JSON.parse(data);
-            //successAction(data);
-        },
-        async: false
-    });
+        $.ajax({
 
+            url: url,
+            type: 'get',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (data, status, xhr) {
+                map_data = JSON.parse(data);
+                console.log(map_data);
+                //successAction(data);
+            },
+            async: false
+        });
+    }
 
 
 
 function initMap() {
+    if ('{{ zipcode }}' != 'None') {
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 11
+        zoom: 11,
+        scrollwheel: false
     });
+
     map_coord = map_data.features[0].geometry.coordinates[0][0][0];
     console.log(map_data);
     map_color = map_data.features[0].properties.color;
+
     map.data.addGeoJson(map_data);
 
     map.data.setStyle(function (feature) {
@@ -125,21 +115,9 @@ function initMap() {
             fillColor: feature.getProperty('color'),
             fillOpacity: 0.8,
             strokeColor: 'black',
-            strokeWeight: 1,
-            title: 'hello',
-            zIndex: 1
+            strokeWeight: 1
         };
     });
-    // examine each feature
-    {#  map.data.forEach(function(feature) {#}
-    {#      map_color = feature.getProperty('color');#}
-    {#      console.log(map_color);#}
-    {#      overrideStyle(feature, {#}
-    {#          fillColor: map_color,#}
-    {#          "fill-opacity": 0.6,#}
-    {#          "stroke-width": "1"#}
-    {#      });#}
-    {#  });#}
 
     map.setCenter(new google.maps.LatLng(map_coord[1], map_coord[0]));
 
@@ -154,7 +132,23 @@ function initMap() {
 	    $('#myModal').modal({show:true})
     });
 }
+    else {
+        latLng = [33.45, -112.06];
+        map_vacant = new google.maps.Map(document.getElementById('map'), {
+            zoom: 11,
+            scrollwheel: false
+        });
+
+
+        map_vacant.setCenter(new google.maps.LatLng(latLng[0], latLng[1]));
+
+    }
+}
+
+
+
     </script>
+
    <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCewFxO002NOxwqXvamA2YSGC3aBVJwLQo&signed_in=true&callback=initMap"></script>
 
@@ -169,6 +163,7 @@ function initMap() {
 
     <!-- Custom Theme JavaScript -->
     <script src="../../static/js/creative.js"></script>
+    <script src="../../static/js/zipcode/request.js"></script>
 
 </body>
 

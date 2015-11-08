@@ -1087,6 +1087,7 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
+  color:black;
 }
 a {
   color: #337ab7;
@@ -1406,7 +1407,7 @@ ol ol {
 
 .page-header2 {
   width: 20px;
-    height: 40px;
+    height: 1px;
     position: relative;
     top: -100px;
     right: -175px;
@@ -6591,4 +6592,3 @@ button.close {
     display: none !important;
   }
 }
-/*# sourceMappingURL=bootstrap.css.map */

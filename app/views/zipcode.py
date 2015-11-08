@@ -21,7 +21,6 @@ def ziphome(zip_id=None):
     else:
         data = request.json
         print data['zipcode']
-        print data['priorities']
         print data['radius']
         return jsonify(zip=data['zipcode']+'r'+data['radius'])
 

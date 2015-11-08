@@ -18,6 +18,7 @@ def get_polygon_map(shape_file_name):
         atr['color'] = 'orange'
         geom = sr.shape.__geo_interface__
         buffer_data.append(dict(type="Feature", geometry=geom, properties=atr))
+        # import pdb; pdb.set_trace()
 
     polygon_map = {"type": "FeatureCollection", "features": buffer_data}
     return json.dumps(polygon_map)

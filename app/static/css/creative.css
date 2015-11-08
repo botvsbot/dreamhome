@@ -65,7 +65,8 @@ p {
 }
 
 section {
-    padding: 100px 0;
+    padding: 12px 0;
+    padding-top: 40px;
 }
 
 aside {
